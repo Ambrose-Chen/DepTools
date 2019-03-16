@@ -1,0 +1,13 @@
+#!/bin/bash
+
+
+iptables -F
+iptables -X
+iptables-save
+
+
+sed '/^/s/enforcing/disabled/g' /etc/selinux/config
+
+
+mkdir $tmp_mount_addr
+mount $iso_addr $tmp_mount_addr

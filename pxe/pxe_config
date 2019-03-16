@@ -1,0 +1,14 @@
+#!/bin/bash
+
+export ip_addr='192.168.122.101'
+export dhcp_ns='192.168.122.0'
+export dhcp_netmask='255.255.255.0'
+export dhcp_range_mix='192.168.122.170'
+export dhcp_range_max='192.168.122.190'
+
+export pxelinux='pxelinux.0'
+
+export iso_addr='/dev/cdrom'
+export tmp_mount_addr='/tmp/'`date +%N`
+
+export centos_version=`cat /etc/redhat-release | awk '{split($4,vers,".");print vers[1]}'`

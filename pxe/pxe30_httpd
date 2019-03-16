@@ -1,0 +1,11 @@
+#!/bin/bash
+
+yum -y install httpd &>/dev/null
+
+printf `cat ${CURDIR}/centos7.ks` $ip_addr >/var/www/html/centos7.ks
+
+mkdir /var/www/html/iso/
+cp -r $tmp_mount_addr/* /var/www/html/iso/
+
+
+start_enable_service httpd

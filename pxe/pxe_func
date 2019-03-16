@@ -1,0 +1,14 @@
+#!/bin/bash
+
+function start_enable_service(){
+	# $1 service
+	
+	if [[ $centos_version == 7 ]];then
+		systemctl enable $1
+		systemctl start $1
+	elif [[ $centos_version == 6 ]];then
+		service $1 start
+		chkconfig $1 on
+	fi
+}
+export -f start_enable_service

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+yum -y install syslinux xinetd tftp-server &>/dev/null
+
+cp $tmp_mount_addr/isolinux/* /var/lib/tftpboot/
+cp /usr/share/syslinux/pxelinux.0 /var/lib/tftpboot
+mkdir /var/lib/tftpboot/isolinux.cfg 
+mv /var/lib/tftpboot/isolinux.cfg /var/lib/tftpboot/pxelinux.cfg/default
+
+sed '64d'  /var/lib/tftpboot/pxelinux.cfg/default  -i
+sed -i "63aappend initrd=initrd.img ks=http://${ip_addr}/centos7.ks"  /var/lib/tftpboot/pxelinux.cfg/default
+
+sed -i '/disable/s/yes/no/g' /etc/xinetd.d/tftp.conf
+
+start_enable_service xinetd
