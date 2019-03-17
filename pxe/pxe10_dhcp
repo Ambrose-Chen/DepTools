@@ -2,7 +2,7 @@
 
 yum -y install dhcp  &>/dev/null
 
-cat > /etc/dhcp/dhcpd.conf >>EOF
+cat > /etc/dhcp/dhcpd.conf <<EOF
     default-lease-time 600;
     max-lease-time 7200;
     log-facility local7;

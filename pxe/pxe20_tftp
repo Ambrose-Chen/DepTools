@@ -1,5 +1,8 @@
 #!/bin/bash
 
+exit 0
+
+
 yum -y install syslinux xinetd tftp-server &>/dev/null
 
 cp $tmp_mount_addr/isolinux/* /var/lib/tftpboot/

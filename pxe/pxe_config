@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export ip_addr='192.168.122.101'
+export ip_addr='192.168.122.10'
 export dhcp_ns='192.168.122.0'
 export dhcp_netmask='255.255.255.0'
 export dhcp_range_mix='192.168.122.170'

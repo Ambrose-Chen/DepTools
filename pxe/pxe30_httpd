@@ -1,5 +1,7 @@
 #!/bin/bash
 
+exit 0
+
 yum -y install httpd &>/dev/null
 
 printf `cat ${CURDIR}/centos7.ks` $ip_addr >/var/www/html/centos7.ks
