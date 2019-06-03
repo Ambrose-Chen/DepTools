@@ -1,14 +1,34 @@
 #!/bin/bash
 
-function start_enable_service(){
-	# $1 service
-	
-	if [[ $centos_version == 7 ]];then
-		systemctl enable $1
-		systemctl start $1
-	elif [[ $centos_version == 6 ]];then
-		service $1 start
-		chkconfig $1 on
-	fi
+
+function dhcp_config()
+{
+	cat > /etc/dhcp/dhcpd.conf <<EOF
+    default-lease-time 600;
+    max-lease-time 7200;
+    log-facility local7;
+    subnet $dhcp_ns netmask $dhcp_netmask {
+        range $dhcp_range_mix $dhcp_range_max;
+        next-server $ip_addr;
+        filename "$pxelinux";
+    }
+EOF
 }
-export -f start_enable_service
+
+function tftp_config()
+{
+	rm -rf /var/lib/tftpboot/*
+	cp $tmp_mount_addr/isolinux/* /var/lib/tftpboot/
+	cp $pxelinux_file /var/lib/tftpboot/pxelinux.0
+
+	mkdir /var/lib/tftpboot/pxelinux.cfg
+	mv /var/lib/tftpboot/isolinux.cfg /var/lib/tftpboot/pxelinux.cfg/default
+
+}
+
+function httpd_config()
+{
+	mkdir /var/www/html/iso/ >/dev/null 2>&1
+	cp -r $tmp_mount_addr/* /var/www/html/iso/
+
+}

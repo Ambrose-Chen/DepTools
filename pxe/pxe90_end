@@ -1,3 +1,0 @@
-#!/bin/bash
-
-umount $tmp_mount_addr

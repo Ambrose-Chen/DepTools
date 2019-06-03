@@ -1,0 +1,17 @@
+#!/bin/bash
+
+#init
+export mount_addr='/media'
+
+
+#PXE
+export ip_addr='172.15.0.254'
+export dhcp_ns='172.15.0.0'
+export dhcp_netmask='255.255.255.0'
+export dhcp_range_mix='172.15.0.2'
+export dhcp_range_max='172.15.0.200'
+export pxelinux='pxelinux.0'
+export tmp_mount_addr='/tmp/'`date +%N`
+
+#common
+export redhat_version=`cat /etc/redhat-release | grep -o [0-9] | head -n1`

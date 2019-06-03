@@ -1,0 +1,99 @@
+#!/bin/bash
+
+function check_yum()
+{
+	yum clean all &>/dev/null
+
+	yum repolist all 2>&1 | grep 'No repositories available' &>/dev/null
+
+	if [ $? -eq 0 ];then
+		return 1
+	fi
+
+	yum repolist all 2>&1 | grep 'enabled' &>/dev/null
+	
+	if [ $? -ne 0 ];then
+                return 1
+        fi
+}
+export -f check_yum
+
+function echo_red()
+{
+	echo -e "\033[31m$1\033[0m"
+}
+export -f echo_red
+
+function echo_green()
+{
+	echo -e "\033[32m$1\033[0m"
+}
+export -f echo_green
+
+function service_on()
+{
+	systemctl status $1 | cat | grep Active | grep running >/dev/null 2>&1
+
+	if [ $? -eq 0 ];then
+		systemctl restart $1
+		systemctl enable --now $1 &>/dev/null
+	else
+		systemctl enable --now $1 &>/dev/null
+	fi
+}
+export -f service_on
+
+function service_off()
+{
+	systemctl disable --now $1 &>/dev/null
+}
+export -f service_off
+
+
+function fw_add_service()
+{
+	firewall-cmd --list-all | grep -w services | grep -w $1 >/dev/null 2>&1
+
+	if [ $? -ne 0 ];then
+		firewall-cmd --permanent --add-service=$1 >/dev/null
+    fi
+}
+export -f fw_add_service
+
+# $1 sccess msg (not null)
+# $2 error msg (not null)
+# $3 is exit ?
+function step_check()
+{
+	if [ $? -ne 0 ];then
+  	echo_red "$2"
+		
+		# x allow $3 equal to null, neddless if
+		if [ "$3"x = "1"x ];then
+			exit 1
+		fi
+
+	else
+		echo_green "$1"
+	fi
+}
+export -f step_check
+
+function check_cdrom()
+{
+	rom_size=`lsblk | grep sr0 | awk '{print $4}'`
+	if [ "$rom_size" = "1024M" ];then
+		return 1
+	fi
+}
+export -f check_cdrom
+
+
+function check_mount()
+{
+	mount $1 /media >/dev/null 2>&1
+	if [ $? -eq 32 ];then
+		return 1
+	fi
+}
+export -f check_mount

@@ -1,0 +1,11 @@
+[BaseOS]
+name=BaseOS
+baseurl=file://{filePath}/BaseOS
+enabled=1
+gpgcheck=0
+
+[AppStream]
+name=AppStream
+baseurl=file://{filePath}/AppStream
+enabled=1
+gpgcheck=0

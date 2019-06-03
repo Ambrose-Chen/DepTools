@@ -1,0 +1,54 @@
+#!/bin/bash
+
+# $1: iso file (not null)
+# $2: pxelinux.0 (not null)
+
+
+export baseurl=`cd $(dirname $0) ; pwd`
+export pxelinux_file=$2
+
+source $baseurl/config
+source $baseurl/common
+source $baseurl/pxe_func
+
+if [ -z $1 ] || [ -z $2 ];then
+	echo_red 'Usage: pxe_install <iso file> <pxelinux.0>'
+	exit 1
+fi
+
+check_yum
+
+if [ $? -ne 0 ];then
+	echo_red 'please check to see if yum is avaliable'
+	exit 1
+fi
+
+
+mkdir -p $tmp_mount_addr
+mount $1 $tmp_mount_addr &>/dev/null
+
+yum -y install \
+				bash-completion \
+				dhcp-server \
+				tftp-server \
+				httpd \
+				vim \
+				&>/dev/null
+
+
+dhcp_config
+tftp_config
+httpd_config
+
+umount $tmp_mount_addr
+
+
+service_on dhcpd
+service_on tftp
+service_on httpd
+
+fw_add_service dhcp
+fw_add_service tftp
+fw_add_service http
+fw_add_service https
+firewall-cmd --reload >/dev/null
