@@ -1,0 +1,12 @@
+- hosts: all:!chia-170-10-0-12:!chia-170-10-0-13:!chia-170-10-0-14:!chia-170-10-0-15:!chia-170-10-0-16:!chia-170-10-0-17:!chia-170-10-0-18:!chia-170-10-0-21:!chia-170-10-0-25:!chia-170-10-0-32:!chia-170-10-0-33:!chia-170-10-0-34
+  gather_facts: no
+  tasks:
+
+    - shell: |
+            df -B K |grep -v Availabl | grep media|sort -t'/' -k 6n | sed 's/K//g'| awk '{if($4>107000000){print $4/107000000" "$NF}}'
+      register: df
+
+    - debug:
+        msg: "{{ df }}"
+
+
